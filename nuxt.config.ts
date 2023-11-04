@@ -6,6 +6,7 @@ export default defineNuxtConfig({
 		"@nuxtjs/device",
 		"@nuxt/image",
 		"@hypernym/nuxt-gsap",
+		"nuxt-swiper",
 	],
 	tailwindcss: {
 		cssPath: "~/assets/css/main.css",

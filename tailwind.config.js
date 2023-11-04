@@ -16,8 +16,8 @@ export default {
 
 		extend: {
 			colors: {
-				primary: "green",
-				secondary: "blue",
+				primary: "var(--primary-color)",
+				secondary: "var(--secondary-color)",
 			},
 		},
 	},

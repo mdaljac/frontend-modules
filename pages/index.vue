@@ -1,54 +1,109 @@
 <template>
-	<div>
-		<h1 class="text-4xl">Home page</h1>
+	<div class="space-y-[15vmin] mb-24">
+		<template v-for="(mod, i) in page.modules" :key="`${mod.collection}-${i}`">
+			<template v-if="mod.collection === 'module_hero'"
+				><ModuleHero :data="mod"
+			/></template>
+			<template v-if="mod.collection === 'module_text'"
+				><ModuleText :data="mod"
+			/></template>
+			<template v-if="mod.collection === 'module_image_text'"
+				><ModuleImageText :data="mod"
+			/></template>
+			<template v-if="mod.collection === 'module_image'"
+				><ModuleImage :data="mod"
+			/></template>
+		</template>
 
-		<!-- device detection -->
-		<div class="mt-10">
-			<p>Device detection:</p>
-			<p>is mobile: {{ $device.isMobile }}</p>
-			<p>is tablet: {{ $device.isTablet }}</p>
-			<p>is desktop: {{ $device.isDesktop }}</p>
-		</div>
-
-		<!-- static image -->
-		<div class="container mt-10">
-			<p>Nuxt-img component:</p>
-			<NuxtImg src="/static.jpeg" class="w-full lg:w-1/2" />
-		</div>
-
-		<!-- api data -->
-		<div class="container mt-10">
-			<ul class="grid grid-cols-1 md:grid-cols-2">
-				<li
-					v-for="article in articles.data"
-					:key="article.id"
-					class="border flex flex-col p-3 space-y-2">
-					<span>Article title: {{ article.title }}</span>
-					<span>Article status: {{ article.status }}</span>
-					<ul class="flex flex-wrap gap-2">
-						<li
-							v-for="tag in article.tags"
-							:key="tag"
-							class="border border-white rounded-full p-1">
-							{{ tag }}
-						</li>
-					</ul>
-				</li>
-			</ul>
-		</div>
+		<section>
+			<div class="container">
+				<div class="lg:w-3/5 lg:mx-auto">
+					<Swiper v-bind="swiperOptions">
+						<SwiperSlide
+							v-for="testimonial in testimonials"
+							:key="testimonial.id">
+							<div class="flex items-center gap-x-4">
+								<AppImage
+									:image="testimonial.image"
+									class="w-14 h-14 lg:w-20 lg:h-20" />
+								<span class="text-lg font-semibold">{{
+									testimonial.company
+								}}</span>
+							</div>
+							<div
+								class="relative border-l border-black/20 ml-3 lg:ml-10 mt-6 pl-8 lg:pl-14">
+								<span class="text-xl font-semibold">{{
+									testimonial.name
+								}}</span>
+								<blockquote class="lg:text-lg italic">
+									{{ testimonial.text }}
+								</blockquote>
+							</div>
+						</SwiperSlide>
+					</Swiper>
+				</div>
+			</div>
+		</section>
 	</div>
 </template>
 
 <script setup>
-const preloader = usePreloader();
+const { $directus, $readItem, $readItems } = useNuxtApp();
 
-const runtimeConfig = useRuntimeConfig();
+const { data: page } = await useAsyncData("page", () => {
+	return $directus.request(
+		$readItem("pages", "homepage", {
+			fields: [
+				"*",
+				{
+					modules: [
+						"collection",
+						{
+							item: [
+								"*",
+								{
+									media: ["*"],
+									button: ["*"],
+									image: ["*"],
+									video: ["*"],
+								},
+							],
+						},
+					],
+				},
+			],
+		}),
+	);
+});
 
-const { data: articles } = await useFetch(
-	`${runtimeConfig.public.apiBase}/articles`,
-);
+const { data: testimonials } = await useAsyncData("testimonials", () => {
+	return $directus.request(
+		$readItems("testimonial", { fields: ["*", { image: ["*"] }] }),
+	);
+});
 
-preloader.isLoading.value = false;
+useSeoMeta({
+	title: page.value.title,
+	description: page.value.description,
+});
+
+const swiperOptions = {
+	modules: [SwiperAutoplay, SwiperEffectFade, SwiperPagination],
+	loop: true,
+	effect: "fade",
+	fadeEffect: {
+		crossFade: true,
+	},
+	speed: 1000,
+	autoplay: {
+		delay: 4000,
+		disableOnInteraction: true,
+	},
+	pagination: {
+		enabled: true,
+		type: "progressbar",
+	},
+};
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="postcss" scoped></style>

@@ -1,5 +1,59 @@
 @import url("common.css");
+@import url("swiper.css");
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+:root {
+	/* default settings */
+	--primary-color: red;
+	--secondary-color: green;
+}
+
+@layer base {
+	.heading {
+		font-size: clamp(theme("fontSize.3xl"), 4vw, theme("fontSize.7xl"));
+		@apply font-bold;
+	}
+	.heading-2 {
+		font-size: clamp(theme("fontSize.2xl"), 3vw, theme("fontSize.5xl"));
+		@apply font-bold;
+	}
+	.heading-3 {
+		font-size: clamp(theme("fontSize.lg"), 2vw, theme("fontSize.3xl"));
+		@apply font-bold;
+	}
+	.body-text {
+		font-size: clamp(theme("fontSize.base"), 2vw, theme("fontSize.2xl"));
+	}
+	.richtext {
+		@apply body-text;
+
+		h1 {
+			@apply heading;
+		}
+
+		h2 {
+			@apply heading-2;
+		}
+
+		h3 {
+			@apply heading-3;
+		}
+	}
+}
+
+@layer components {
+	.btn {
+		@apply border border-black px-6 py-2;
+
+		&-pill {
+			@apply rounded-full;
+		}
+
+		&-primary {
+			@apply bg-primary text-white;
+		}
+	}
+}

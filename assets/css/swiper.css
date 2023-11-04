@@ -1,0 +1,9 @@
+.swiper-watch-progress {
+	@apply !pb-12;
+}
+.swiper-pagination-progressbar {
+	@apply !top-auto !bottom-0;
+}
+.swiper-pagination-progressbar-fill {
+	@apply !bg-blue-400;
+}

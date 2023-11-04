@@ -17,6 +17,8 @@
     "nuxt": "^3.7.4"
   },
   "dependencies": {
-    "@nuxt/image": "^1.0.0-rc.2"
+    "@directus/sdk": "^13.0.1",
+    "@nuxt/image": "^1.0.0-rc.2",
+    "nuxt-swiper": "^1.2.2"
   }
 }
